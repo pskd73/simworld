@@ -1,3 +1,4 @@
+import * as p5Global from 'p5/global';
 const blockSize = 10
 const boardSize = 40
 const pos = [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}]
@@ -10,7 +11,7 @@ let food = newPosition()
 let blocksToAdd = 0
 let score = 0
 
-function random_(n) {
+function random_(n: number) {
   return Math.floor(Math.random() * n);
 }
     
@@ -18,11 +19,11 @@ function newPosition() {
   return {x: random_(boardSize), y: random_(boardSize)}
 }
 
-function setup() {
+(window as any).setup = function setup() {
   createCanvas(boardSize * blockSize, boardSize * blockSize);
-}
+};
 
-function draw() {
+(window as any).draw = function draw() {
   if (!gameOver && clock % max(1, (10 - spd)) == 0) {
     if (blocksToAdd === 0) {
       for (let i = 1; i < pos.length; i++) {
@@ -46,7 +47,7 @@ function draw() {
       return
     }
       
-    const nBlocks = {}
+    const nBlocks: Record<string, number> = {}
     for (let i = 0; i < pos.length; i++) {
       const k = `${pos[i].x},${pos[i].y}`
       if (!nBlocks[k]) {
@@ -67,7 +68,7 @@ function draw() {
     }
     
     
-    clear()
+    clear(0, 0, 0, 0);
     background(222, 220, 217)    
     noStroke()
     
@@ -109,9 +110,9 @@ function draw() {
   }
   
   clock += 1
-}
+};
 
-function keyPressed() {
+(window as any).keyPressed = function keyPressed() {
   if (keyCode === 40) {
     dir.x = 0
     dir.y = 1

@@ -1,16 +1,19 @@
-function fullDeg(deg, x) {
+export function fullDeg(deg: number, x: number) {
   let ref = x < 0 ? 180 : 360
   return (ref + deg) % 360
 }
 
-function getLineDegree(s, e) {
+export function getLineDegree(s: Point, e: Point) {
   const x = e.x - s.x
   const y = e.y - s.y
   return fullDeg(atan(y/x), x)
 }
 
-class Point {
-  constructor(x, y) {
+export class Point {
+  x: number
+  y: number
+
+  constructor(x: number, y: number) {
     this.x = x
     this.y = y
   }
@@ -23,24 +26,27 @@ class Point {
     return fullDeg(atan(this.y / this.x), this.x)
   }
   
-  rotateBy(deg) {
+  rotateBy(deg: number) {
     const length = this.length()
     const angle = this.angle()
     this.x = cos(angle + deg) * length
     this.y = sin(angle + deg) * length
   }
   
-  getDistance(pnt) {
+  getDistance(pnt: Point) {
     return sqrt(sq(this.y - pnt.y) + sq(this.x - pnt.x))
   }
   
-  draw(x, y) {
+  draw(x: number, y: number) {
     point(x + this.x, y - this.y)
   }
 }
 
-class Vector {
-  constructor(size, angle) {
+export class Vector {
+  size: number
+  angle: number
+
+  constructor(size: number, angle: number) {
     this.size = size
     this.angle = angle
   }
@@ -60,7 +66,7 @@ class Vector {
     return new Point(x, y)
   }
   
-  add(v) {
+  add(v: number|Vector) {
     if (typeof v === "number") {
       this.size += v
     } else {
@@ -73,7 +79,7 @@ class Vector {
     }
   }
   
-  multiply(v) {
+  multiply(v: number|Vector) {
     if (typeof v === "number") {
       this.size *= v
     } else {
@@ -90,7 +96,7 @@ class Vector {
     return new Vector(this.size, this.angle)
   }
   
-  draw(x, y) {
+  draw(x: number, y: number) {
     const [tx, ty] = this.xy()
     stroke(57, 66, 64)
     line(x, y, x + tx, y - ty)

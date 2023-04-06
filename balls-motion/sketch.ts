@@ -1,17 +1,21 @@
+import * as p5Global from 'p5/global'
+import { Ball } from './ball'
+import { getLineDegree, Point, Vector } from './vector'
+
 const G = -0.98
 const W = 400
 const H = 400
 
-function getPadded(x, y) {
+function getPadded(x: number, y: number) {
   return [x + 10, y + 10]
 }
 
-const balls = []
-let focus = undefined
+const balls: Ball[] = []
+let focus: number|undefined = undefined
 
 let t = 0
 
-function setup() {
+window.setup = function() {
   createCanvas(W, H)
   noStroke()
   
@@ -26,7 +30,7 @@ function setup() {
   angleMode(DEGREES)
 }
 
-function draw() {
+window.draw = function() {
   background(220)
   
   for (let i = 0; i < balls.length; i++) {
@@ -37,8 +41,8 @@ function draw() {
   t += 1
 }
 
-function keyPressed() {
-  const keyIdxMap = {
+window.keyPressed = function() {
+  const keyIdxMap: Record<number, number> = {
     75: 0,
     83: 1
   }
@@ -53,7 +57,7 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
+window.mousePressed = function() {
   for (let i = 0; i < balls.length; i++) {
     const ball = balls[i]
     if (ball.isInside(
@@ -65,7 +69,7 @@ function mousePressed() {
   }
 }
 
-function mouseReleased() {
+window.mouseReleased = function() {
   if (focus !== undefined) {
     const ball = balls[focus]
     const ep = new Point(mouseX - 10, H - mouseY - 10)

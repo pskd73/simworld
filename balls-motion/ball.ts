@@ -1,5 +1,16 @@
-class Ball {
-  constructor(id, radius, position) {
+import { Point, Vector } from "./vector"
+
+export class Ball {
+  id: number
+  radius: number
+  color: number[]
+  position: Point
+  velocity: Vector
+  last_t: number
+  frictionRate: number
+  mass: number
+
+  constructor(id: number, radius: number, position: Point) {
     this.id = id
     this.radius = radius
     this.color = [random(255), random(255), random(255)]
@@ -10,14 +21,14 @@ class Ball {
     this.frictionRate = 0.95
     this.mass = 1
 
-    this.gravities = []
+    // this.gravities = []
   }
   
-  isInside(pnt) {
+  isInside(pnt: Point) {
     return this.radius >= this.position.getDistance(pnt)
   }
   
-  animate(t, balls, w, h) {
+  animate(t: number, balls: Ball[]) {
     if (this.velocity.size > 0) {
       // move position
       const dt = t - this.last_t
@@ -33,26 +44,26 @@ class Ball {
       
       
       // push other balls
-      // for (let i = 0; i < balls.length; i++) {
-      //   const ball = balls[i]
-      //   if (ball.id === this.id) {
-      //     continue
-      //   }
-      //   const dist = ball.position.getDistance(this.position)
-      //   if (dist <= ball.radius + this.radius) {
-      //     ball.push(this.velocity.copy())
-      //   }
-      // }
+      for (let i = 0; i < balls.length; i++) {
+        const ball = balls[i]
+        if (ball.id === this.id) {
+          continue
+        }
+        const dist = ball.position.getDistance(this.position)
+        if (dist <= ball.radius + this.radius) {
+          ball.push(this.velocity.copy())
+        }
+      }
 
       // apply other forces
-      // let mult = this.frictionRate / this.mass
-      // this.velocity.multiply(mult)
+      let mult = this.frictionRate / this.mass
+      this.velocity.multiply(mult)
     }
     
     this.last_t = t
   }
   
-  push(a) {
+  push(a: Vector) {
     this.velocity.add(a)
 
     if (this.position.y - this.radius <= 0) {
@@ -61,8 +72,8 @@ class Ball {
     }
   }
   
-  draw(x, y) {
-    fill(...this.color)
+  draw(x: number, y: number) {
+    fill(this.color[0], this.color[1], this.color[2])
     circle(
       x + this.position.x, 
       y - this.position.y, 

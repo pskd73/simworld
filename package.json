@@ -1,0 +1,31 @@
+{
+  "name": "simworld",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pskd73/simworld.git"
+  },
+  "author": "Pramod",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pskd73/simworld/issues"
+  },
+  "homepage": "https://github.com/pskd73/simworld#readme",
+  "dependencies": {
+    "@types/p5": "^1.6.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.3",
+    "webpack": "^5.78.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^4.13.2"
+  }
+}
