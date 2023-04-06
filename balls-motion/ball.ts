@@ -1,4 +1,4 @@
-import { Point, Vector } from "./vector"
+import { Point, Vector } from "../physics/vector"
 
 export class Ball {
   id: number

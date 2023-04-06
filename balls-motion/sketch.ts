@@ -1,6 +1,6 @@
 import * as p5Global from 'p5/global'
 import { Ball } from './ball'
-import { getLineDegree, Point, Vector } from './vector'
+import { getLineDegree, Point, Vector } from '../physics/vector'
 
 const G = -0.98
 const W = 400
