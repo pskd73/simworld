@@ -9,13 +9,15 @@ class Ball {
     this.last_t = 0
     this.frictionRate = 0.95
     this.mass = 1
+
+    this.gravities = []
   }
   
   isInside(pnt) {
     return this.radius >= this.position.getDistance(pnt)
   }
   
-  animate(t, balls) {
+  animate(t, balls, w, h) {
     if (this.velocity.size > 0) {
       // move position
       const dt = t - this.last_t
@@ -31,20 +33,20 @@ class Ball {
       
       
       // push other balls
-      for (let i = 0; i < balls.length; i++) {
-        const ball = balls[i]
-        if (ball.id === this.id) {
-          continue
-        }
-        const dist = ball.position.getDistance(this.position)
-        if (dist <= ball.radius + this.radius) {
-          ball.push(this.velocity.copy())
-        }
-      }
+      // for (let i = 0; i < balls.length; i++) {
+      //   const ball = balls[i]
+      //   if (ball.id === this.id) {
+      //     continue
+      //   }
+      //   const dist = ball.position.getDistance(this.position)
+      //   if (dist <= ball.radius + this.radius) {
+      //     ball.push(this.velocity.copy())
+      //   }
+      // }
 
       // apply other forces
-      let mult = this.frictionRate / this.mass
-      this.velocity.multiply(mult)
+      // let mult = this.frictionRate / this.mass
+      // this.velocity.multiply(mult)
     }
     
     this.last_t = t
@@ -52,6 +54,11 @@ class Ball {
   
   push(a) {
     this.velocity.add(a)
+
+    if (this.position.y - this.radius <= 0) {
+      this.position.y = this.radius
+      this.velocity.size = 0
+    }
   }
   
   draw(x, y) {
