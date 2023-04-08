@@ -28,7 +28,7 @@ export class Ball {
     return this.radius >= this.position.getDistance(pnt)
   }
   
-  animate(t: number, balls: Ball[]) {
+  animate(t: number, balls: Ball[], w: number, h: number) {
     if (this.velocity.size > 0) {
       // move position
       const dt = t - this.last_t
@@ -38,10 +38,9 @@ export class Ball {
       ).point()
 
       this.position = new Point(
-        this.position.x + newPos.x, 
-        this.position.y + newPos.y
+        min(max(0, this.position.x + newPos.x), w-this.radius*2), 
+        min(max(0, this.position.y + newPos.y), h-this.radius*2)
       )
-      
       
       // push other balls
       for (let i = 0; i < balls.length; i++) {
@@ -51,8 +50,28 @@ export class Ball {
         }
         const dist = ball.position.getDistance(this.position)
         if (dist <= ball.radius + this.radius) {
-          ball.push(this.velocity.copy())
+          ball.push(new Vector(this.velocity.size, this.velocity.angle))
+          this.push(new Vector(ball.velocity.size*0.7, this.velocity.angle + 180))
         }
+      }
+
+      // boundaries
+      if (this.position.x === 0) {
+        this.push(
+          new Vector(1.7 * this.velocity.size, 0)
+        )
+      } else if (this.position.x === w-this.radius*2) {
+        this.push(
+          new Vector(1.7 * this.velocity.size, 180)
+        )
+      } else if (this.position.y === 0) {
+        this.push(
+          new Vector(1.7 * this.velocity.size, 90)
+        )
+      } else if (this.position.y === h-this.radius*2) {
+        this.push(
+          new Vector(1.7 * this.velocity.size, 270)
+        )
       }
 
       // apply other forces
@@ -65,11 +84,6 @@ export class Ball {
   
   push(a: Vector) {
     this.velocity.add(a)
-
-    if (this.position.y - this.radius <= 0) {
-      this.position.y = this.radius
-      this.velocity.size = 0
-    }
   }
   
   draw(x: number, y: number) {

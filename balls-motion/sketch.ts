@@ -1,85 +1,41 @@
 import * as p5Global from 'p5/global'
-import { Ball } from './ball'
-import { getLineDegree, Point, Vector } from '../physics/vector'
+import { Point, Vector } from '../physics/vector'
+import { Circle, RealObject } from '../physics/realObj'
+import { Force } from '../physics/force'
+import { World } from '../physics/world'
 
-const G = -0.98
 const W = 400
 const H = 400
+const MPP = 10
 
-function getPadded(x: number, y: number) {
-  return [x + 10, y + 10]
-}
-
-const balls: Ball[] = []
-let focus: number|undefined = undefined
+const world = new World()
+const ball = new RealObject(new Circle(10), new Point(0, 0))
 
 let t = 0
 
 window.setup = function() {
   createCanvas(W, H)
-  noStroke()
-  
-  const ball1 = new Ball(0, 10, new Point(W/2, H/2))
-  const ball2 = new Ball(1, 10, new Point(W/2 + 20, H/2 + 20))
-  
-  ball2.mass = 1.1
-  
-  balls.push(ball1)
-  balls.push(ball2)
-  
   angleMode(DEGREES)
+  Vector.test()
+
+  ball.position = new Point(0, 100)
+  ball.forces['gravity'] = new Force(new Vector(9.8 * MPP, 270))
+  ball.velocity = new Vector(1000 * 6.2, 85)
+  world.objects.push(ball)
 }
 
 window.draw = function() {
   background(220)
-  
-  for (let i = 0; i < balls.length; i++) {
-    balls[i].animate(t, balls)
-    balls[i].draw(10, H - 10)
-  }
-  
+
+  const prevVel = ball.velocity.copy()
+
+  ball.update(1/1000)
+  world.update(t)
+  ball.draw(W, H)
+
+  text(`v = ${round(ball.velocity.size, 1)} p/s`, 5, H-20)
+  text(`a = ${round(ball.acceleration(prevVel, 1).size, 2)} p/s2`, 5, H-5)
+  text(`(${round(ball.position.x, 2)}, ${round(ball.position.y, 2)})`, 5, H-35)
+
   t += 1
-}
-
-window.keyPressed = function() {
-  const keyIdxMap: Record<number, number> = {
-    75: 0,
-    83: 1
-  }
-  if (keyIdxMap[keyCode] !== undefined) {
-    const ball = balls[keyIdxMap[keyCode]]
-    ball.push(
-      new Vector(
-        random(5), 
-        keyIdxMap[keyCode] === 0 ? 70 : (180 + 70)
-      )
-    )
-  }
-}
-
-window.mousePressed = function() {
-  for (let i = 0; i < balls.length; i++) {
-    const ball = balls[i]
-    if (ball.isInside(
-      new Point(mouseX - 10, H - mouseY - 10)
-    )) {
-      focus = i
-      break
-    }
-  }
-}
-
-window.mouseReleased = function() {
-  if (focus !== undefined) {
-    const ball = balls[focus]
-    const ep = new Point(mouseX - 10, H - mouseY - 10)
-    ball.push(
-      new Vector(
-        ball.position.getDistance(ep) * 0.08, 
-        getLineDegree(ball.position, ep)
-      )
-    )
-  }
-  
-  focus = undefined
 }
