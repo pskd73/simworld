@@ -1,12 +1,16 @@
 import * as p5Global from 'p5/global';
+import { Graph } from './graph';
 
-const W = 400;
-const H = 400;
+const W = 1200;
+const H = 800;
 
 let unit = 20
 let padx = 0
 let pady = 0
 const markerH = 10
+let graph: Graph|null = null
+let run = true
+let dunit = 0
 
 type LineFunction = (x: number) => number
 
@@ -35,29 +39,45 @@ function drawAxis(xf: LineFunction, yf: LineFunction) {
   line(xc(0), yc(H/2+pady), xc(0), yc(-H/2+pady))
   textSize(8)
 
-  for (let i = 1; i < W/2/unit; i++) {
-    const x = xc(i*unit)
-    const ys = yc(markerH/2)
-    const ye = yc(-markerH/2)
-    line(x, ys, x, ye)
-    text(xf(i), x, yc(-markerH))
+  for (let i = 0; i < W; i += unit) {
+    line(i, yc(markerH/2), i, yc(-markerH/2))
+    text(xf((i-W/2+padx)/unit), i, yc(-markerH))
 
-    const nx = xc(-i*unit)
-    line(nx, ys, nx, ye)
-    text(xf(-i), nx,yc(-markerH))
+    // const neti = -W/2/unit+padx
+    // const x = xc(neti*unit)
+    // const ys = yc(markerH/2)
+    // const ye = yc(-markerH/2)
+    // line(x, ys, x, ye)
+    // text(xf(i), x, yc(-markerH))
   }
 
-  for (let i = 1; i < H/2/unit; i++) {
-    const y = yc(i*unit)
-    const xs = xc(-markerH/2)
-    const xe = xc(markerH/2)
-    line(xs, y, xe, y)
-    text(yf(i), xc(markerH/2), y)
-
-    const ny = yc(-i*unit)
-    line(xs, ny, xe, ny)
-    text(yf(-i), xc(markerH/2), ny)
+  for (let i = 0; i < H; i += unit) {
+    line(xc(-markerH/2), i, xc(markerH/2), i)
   }
+
+  // for (let i = 1; i < W/2/unit; i++) {
+  //   const x = xc(i*unit)
+  //   const ys = yc(markerH/2)
+  //   const ye = yc(-markerH/2)
+  //   line(x, ys, x, ye)
+  //   text(xf(i), x, yc(-markerH))
+
+  //   const nx = xc(-i*unit)
+  //   line(nx, ys, nx, ye)
+  //   text(xf(-i), nx,yc(-markerH))
+  // }
+
+  // for (let i = 1; i < H/2/unit; i++) {
+  //   const y = yc(i*unit)
+  //   const xs = xc(-markerH/2)
+  //   const xe = xc(markerH/2)
+  //   line(xs, y, xe, y)
+  //   text(yf(i), xc(markerH/2), y)
+
+  //   const ny = yc(-i*unit)
+  //   line(xs, ny, xe, ny)
+  //   text(yf(-i), xc(markerH/2), ny)
+  // }
 }
 
 function drawCurve(f: LineFunction, xf: LineFunction, color: number[]) {
@@ -88,39 +108,48 @@ window.setup = () => {
   createCanvas(W, H)
   angleMode(DEGREES)
 
-  colors['sin'] = [random(255), random(255), random(255)]
-  colors['cos'] = [random(255), random(255), random(255)]
-  colors['tan'] = [random(255), random(255), random(255)]
+  graph = new Graph({w: W, h: H, xf: x => x*90 % 360})
+  graph.curves.push({
+    f: sin,
+    color: [random(255), random(255), random(255)]
+  })
+  graph.curves.push({
+    f: cos,
+    color: [random(255), random(255), random(255)]
+  })
 };
 
 window.draw = () => {
+  if (!run) return
   background(220)
-  const xf = (x: number) => x * 90
-  drawAxis(xf, y => y)
 
-  drawCurve(sin, xf, colors['sin'])
-  // drawCurve(cos, xf, colors['cos'])
-  // drawCurve(tan, xf, colors['tan'])
+  if (graph) {
+    graph.drawAxis()
+    graph.drawCurves()
+  }
 };
 
 window.keyPressed = () => {
   console.log(keyCode)
   if (keyCode === 61) {
-    unit *= 2
+    graph!.unit *= 2
   }
   if (keyCode === 173) {
-    unit /= 2
+    graph!.unit /= 2
   }
   if (keyCode === 39) {
-    padx += unit
+    graph!.padx += graph!.unit
   }
   if (keyCode === 37) {
-    padx -= unit
+    graph!.padx -= graph!.unit
   }
   if (keyCode === 38) {
-    pady += unit
+    graph!.pady += graph!.unit
   }
   if (keyCode === 40) {
-    pady -= unit
+    graph!.pady -= graph!.unit
+  }
+  if (keyCode === 80) {
+    run = false
   }
 }
