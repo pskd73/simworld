@@ -66,10 +66,14 @@ export class Graph {
     textSize(8)
   
     for (let i = 0; i < this.w; i += this.unit) {
+      push()
+      stroke(212, 212, 212)
       line(
-        i, this.yc(this.markerH/2), 
-        i, this.yc(-this.markerH/2)
+        i, 0, 
+        i, this.h
       )
+      pop()
+
       text(
         round(this.xf((i-this.w/2-this.padx)/this.unit), 2), 
         i, this.yc(-this.markerH)
@@ -77,10 +81,14 @@ export class Graph {
     }
   
     for (let i = 0; i < this.h; i += this.unit) {
+      push()
+      stroke(212, 212, 212)
       line(
-        this.xc(-this.markerH/2), i, 
-        this.xc(this.markerH/2), i
+        0, i, 
+        this.w, i
       )
+      pop()
+
       text(
         round(this.yf(-(i-this.h/2+this.pady)/this.unit), 2), 
         this.xc(this.markerH/2), i
@@ -92,8 +100,10 @@ export class Graph {
     for (let i = 0; i < this.curves.length; i++) {
       const curve = this.curves[i]
 
+      push()
       fill(curve.color)
       stroke(curve.color)
+      strokeWeight(2)
     
       let lx = null, ly = null
       for (let x = this.leftEnd(); x < this.rightEnd(); x++) {
@@ -106,6 +116,7 @@ export class Graph {
         }
         lx = x, ly = y
       }
+      pop()
     }
   }
 }

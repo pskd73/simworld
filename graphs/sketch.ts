@@ -11,16 +11,16 @@ window.setup = () => {
   createCanvas(W, H)
   angleMode(DEGREES)
 
-  graph = new Graph({w: W, h: H, xf: x => x*90 % 360})
+  graph = new Graph({w: W, h: H, xf: x => x*90%360})
   graph.curves.push({
-    f: tan,
+    f: sin,
     color: [random(255), random(255), random(255)]
   })
 };
 
 window.draw = () => {
   if (!run) return
-  background(220)
+  background(255, 255, 255)
 
   if (graph) {
     graph.drawAxis()
@@ -50,5 +50,12 @@ window.keyPressed = () => {
   }
   if (keyCode === 80) {
     run = false
+  }
+}
+
+window.mouseDragged = () => {
+  if (graph) {
+    graph.padx += movedX
+    graph.pady += -movedY
   }
 }
