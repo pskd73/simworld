@@ -11,19 +11,11 @@ window.setup = () => {
   createCanvas(W, H)
   angleMode(DEGREES)
 
-  graph = new Graph({w: W, h: H, xf: x => x * 90 % 360})
+  graph = new Graph({w: W, h: H})
   graph.curves.push({
-    f: sin,
+    f: x => 1/x,
     color: [random(255), random(255), random(255)]
   })
-  // graph.curves.push({
-  //   f: cos,
-  //   color: [random(255), random(255), random(255)]
-  // })
-  // graph.curves.push({
-  //   f: tan,
-  //   color: [random(255), random(255), random(255)]
-  // })
 };
 
 window.draw = () => {
@@ -46,6 +38,7 @@ window.mouseDragged = () => {
 window.mouseWheel = (event) => {
   const delta = (event as any).delta
   if (graph) {
-    graph.unit += (delta/abs(delta))*2
+    graph.unit += ((delta/abs(delta)) * 10)
+    graph.unit = max(1, graph.unit)
   }
 }
