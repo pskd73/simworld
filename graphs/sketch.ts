@@ -1,8 +1,8 @@
 import * as p5Global from 'p5/global';
 import { Graph } from './graph';
 
-const W = 400;
-const H = 400;
+const W = window.innerWidth - 50;
+const H = window.innerHeight - 50;
 
 let graph: Graph|null = null
 let run = true
@@ -11,11 +11,19 @@ window.setup = () => {
   createCanvas(W, H)
   angleMode(DEGREES)
 
-  graph = new Graph({w: W, h: H, xf: x => x*90%360})
+  graph = new Graph({w: W, h: H, xf: x => x * 90 % 360})
   graph.curves.push({
     f: sin,
     color: [random(255), random(255), random(255)]
   })
+  // graph.curves.push({
+  //   f: cos,
+  //   color: [random(255), random(255), random(255)]
+  // })
+  // graph.curves.push({
+  //   f: tan,
+  //   color: [random(255), random(255), random(255)]
+  // })
 };
 
 window.draw = () => {

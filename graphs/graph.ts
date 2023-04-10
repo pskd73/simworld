@@ -63,36 +63,40 @@ export class Graph {
       this.w/2 + this.padx, this.ry(this.h),
       this.w/2 + this.padx, this.ry(0)
     )
+    
     textSize(8)
-  
-    for (let i = 0; i < this.w; i += this.unit) {
-      push()
-      stroke(212, 212, 212)
-      line(
-        i, 0, 
-        i, this.h
-      )
-      pop()
+    for (let px = 0; px < this.w; px++) {
+      if ((px-this.padx) % this.unit === 0) {
+        push()
+        stroke(212, 212, 212)
+        line(
+          px, 0, 
+          px, this.h
+        )
+        pop()
 
-      text(
-        round(this.xf((i-this.w/2-this.padx)/this.unit), 2), 
-        i, this.yc(-this.markerH)
-      )
+        text(
+          round(this.xf((px-this.w/2-this.padx)/this.unit), 2), 
+          px, this.yc(-this.markerH)
+        )
+      }
     }
   
-    for (let i = 0; i < this.h; i += this.unit) {
-      push()
-      stroke(212, 212, 212)
-      line(
-        0, i, 
-        this.w, i
-      )
-      pop()
+    for (let py = 0; py < this.h; py++) {
+      if ((py+this.pady) % this.unit === 0) {
+        push()
+        stroke(212, 212, 212)
+        line(
+          0, py, 
+          this.w, py
+        )
+        pop()
 
-      text(
-        round(this.yf(-(i-this.h/2+this.pady)/this.unit), 2), 
-        this.xc(this.markerH/2), i
-      )
+        text(
+          round(this.yf(-(py-this.h/2+this.pady)/this.unit), 2), 
+          this.xc(this.markerH/2), py
+        )
+      }
     }
   }
 
