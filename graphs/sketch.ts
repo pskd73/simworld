@@ -36,34 +36,16 @@ window.draw = () => {
   }
 };
 
-window.keyPressed = () => {
-  console.log(keyCode)
-  if (keyCode === 61) {
-    graph!.unit *= 2
-  }
-  if (keyCode === 173) {
-    graph!.unit /= 2
-  }
-  if (keyCode === 39) {
-    graph!.padx += graph!.unit
-  }
-  if (keyCode === 37) {
-    graph!.padx -= graph!.unit
-  }
-  if (keyCode === 38) {
-    graph!.pady += graph!.unit
-  }
-  if (keyCode === 40) {
-    graph!.pady -= graph!.unit
-  }
-  if (keyCode === 80) {
-    run = false
-  }
-}
-
 window.mouseDragged = () => {
   if (graph) {
     graph.padx += movedX
     graph.pady += -movedY
+  }
+}
+
+window.mouseWheel = (event) => {
+  const delta = (event as any).delta
+  if (graph) {
+    graph.unit += (delta/abs(delta))*2
   }
 }

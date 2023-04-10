@@ -10,7 +10,6 @@ export class Graph {
   padx: number
   pady: number
   unit: number
-  markerH: number = 10
   curves: {f: LineFunction, color: number[]}[]
 
   constructor(args: {
@@ -26,7 +25,7 @@ export class Graph {
     this.yf = args.yf || defaultLineFunction
     this.padx = 0
     this.pady = 0
-    this.unit = args.unit || 20
+    this.unit = args.unit || 40
     this.curves = []
   }
 
@@ -51,7 +50,7 @@ export class Graph {
   }
 
   drawAxis() {
-    const color = [136, 138, 137]
+    const color = [12, 66, 242]
     stroke(color)
     fill(color)
   
@@ -63,21 +62,30 @@ export class Graph {
       this.w/2 + this.padx, this.ry(this.h),
       this.w/2 + this.padx, this.ry(0)
     )
+
+    const unitsY = floor(this.h/this.unit)
+    let gridPadY = (this.h - (unitsY*this.unit))/2
+    gridPadY = unitsY%2 === 0 ? gridPadY : gridPadY-this.unit/2
+
+    const unitsX = floor(this.w/this.unit)
+    let gridPadX = (this.w - (unitsX*this.unit))/2
+    gridPadX = unitsX%2 === 0 ? gridPadX : gridPadX-this.unit/2
     
     textSize(8)
     for (let px = 0; px < this.w; px++) {
       if ((px-this.padx) % this.unit === 0) {
         push()
+        const paddedPx = px+gridPadX
         stroke(212, 212, 212)
         line(
-          px, 0, 
-          px, this.h
+          paddedPx, 0, 
+          paddedPx, this.h
         )
         pop()
 
         text(
-          round(this.xf((px-this.w/2-this.padx)/this.unit), 2), 
-          px, this.yc(-this.markerH)
+          round(this.xf((paddedPx-this.w/2-this.padx)/this.unit), 2), 
+          paddedPx, this.yc(-10)
         )
       }
     }
@@ -85,16 +93,17 @@ export class Graph {
     for (let py = 0; py < this.h; py++) {
       if ((py+this.pady) % this.unit === 0) {
         push()
+        const paddedPy = py+gridPadY
         stroke(212, 212, 212)
         line(
-          0, py, 
-          this.w, py
+          0, paddedPy, 
+          this.w, paddedPy
         )
         pop()
 
         text(
-          round(this.yf(-(py-this.h/2+this.pady)/this.unit), 2), 
-          this.xc(this.markerH/2), py
+          round(this.yf(-(paddedPy-this.h/2+this.pady)/this.unit), 2), 
+          this.xc(5), paddedPy
         )
       }
     }
